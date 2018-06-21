@@ -1,0 +1,29 @@
+data Desplazamiento = Arriba | Abajo | Izquierda | Derecha deriving (Show, Eq)
+
+type Conjunto a = [a]
+type Camino = [Desplazamiento]
+type Posicion = (Integer,Integer)
+type Tablero a = [[a]]
+type CampoMinado = Tablero Bool
+type TableroAF = Tablero Desplazamiento
+
+-- Gira un desplazamiento en lista de listas
+
+-- Recibe un desplazamiento, y lo gira sentido horario:
+girar :: Desplazamiento -> Desplazamiento
+girar Arriba = Derecha
+girar Derecha = Abajo
+girar Abajo = Izquierda
+girar Izquierda = Arriba
+
+--Recibe un Camino y un valor "K". Gira el desplazamiento (en sentido horario) que está en K: 
+giraEnCamino :: Camino -> Integer -> Camino
+giraEnCamino camino 1 = ( girar (head camino) : tail camino )
+giraEnCamino camino k = ( head camino : giraEnCamino (tail camino) (k-1) )
+
+--Recibe un tableroAF y una posición (i,j). Gira el desplazamiento de la posición j (columna) que está en la lista i (fila)
+
+giraEnTableroAF :: TableroAF -> Posicion -> TableroAF
+giraEnTableroAF tablero (1, j) = ( giraEnCamino (head tablero) j : tail tablero )
+giraEnTableroAF tablero (i, j) = ( head tablero : giraEnTableroAF (tail tablero) (i-1, j) )
+
